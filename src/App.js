@@ -1,23 +1,37 @@
-import logo from './logo.svg';
+
+import { useState } from 'react';
 import './App.css';
+import Carousel from './components/Carousel';
+import Cart from './components/Cart';
+import Navbar from './components/Navbar';
+import Product from './components/Product';
 
 function App() {
+  const [openCart,setOpenCart] = useState(false);
+  const [inCart,setInCart] = useState([]);
+
+  function handleCart(){
+    setOpenCart(true)
+  }
+  function handleCartClose(){
+    setOpenCart(false)
+  }
+  function handleAddItem(item){
+    setInCart([...inCart,item])
+  }
+  function handleDelete(i){
+    let arr = inCart.filter((_,index) => index !== i)
+    setInCart(arr);
+  }
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Navbar cart={handleCart} item={inCart}/> 
+      <div className='wrapper'>
+        <Carousel/>
+        <Product addCart={handleAddItem}/>
+      </div>
+      {openCart && <Cart closeCart={handleCartClose} item={inCart} deleteItem={handleDelete}/>}
     </div>
   );
 }
